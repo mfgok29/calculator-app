@@ -253,14 +253,22 @@ class Calculator {
         // Format the result
         this.lastResult = result;
         this.currentInput = this.formatResult(result);
-        this.previousInput = '';
 
-        if (!chainOperation) {
+        if (chainOperation) {
+            // For chain operations, use the result as the next previous input
+            this.previousInput = this.currentInput;
+            // Keep the operation for next calculation
+            this.shouldResetDisplay = true;
+        } else {
+            // For final calculation, reset everything
+            this.previousInput = '';
             this.operation = null;
+            this.shouldResetDisplay = true;
+            this.displayInput.textContent = '';
         }
 
-        this.shouldResetDisplay = true;
-        this.displayInput.textContent = '';
+        // Update display to show the result
+        this.updateDisplay();
         this.animateResult();
     }
 
