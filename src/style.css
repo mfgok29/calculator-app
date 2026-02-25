@@ -1,0 +1,444 @@
+/* ==========================================
+   RESET & BASE STYLES
+   ========================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Color Palette */
+    --bg-color: #0f172a;
+    --calculator-bg: #1e293b;
+    --display-bg: #0f172a;
+    --display-text: #f1f5f9;
+    --display-secondary: #64748b;
+
+    /* Button Colors */
+    --btn-number-bg: #334155;
+    --btn-number-hover: #475569;
+    --btn-number-active: #64748b;
+
+    --btn-operation-bg: #0ea5e9;
+    --btn-operation-hover: #0284c7;
+    --btn-operation-active: #0369a1;
+
+    --btn-clear-bg: #ef4444;
+    --btn-clear-hover: #dc2626;
+    --btn-clear-active: #b91c1c;
+
+    --btn-equals-bg: #10b981;
+    --btn-equals-hover: #059669;
+    --btn-equals-active: #047857;
+
+    /* Animation Timing */
+    --transition-fast: 0.1s;
+    --transition-normal: 0.2s;
+    --transition-slow: 0.3s;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* ==========================================
+   CALCULATOR CONTAINER
+   ========================================== */
+.calculator {
+    background: var(--calculator-bg);
+    border-radius: 24px;
+    box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    padding: 24px;
+    max-width: 360px;
+    width: 100%;
+    transform: translateY(0);
+    animation: calculatorEnter 0.5s ease-out;
+}
+
+@keyframes calculatorEnter {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==========================================
+   DISPLAY SECTION
+   ========================================== */
+.calculator-display {
+    background: var(--display-bg);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    text-align: right;
+    box-shadow: 
+        inset 0 2px 4px rgba(0, 0, 0, 0.3),
+        0 1px 0 rgba(255, 255, 255, 0.05);
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.display-input {
+    color: var(--display-secondary);
+    font-size: 1.25rem;
+    min-height: 1.5rem;
+    margin-bottom: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: color var(--transition-normal);
+}
+
+.display-result {
+    color: var(--display-text);
+    font-size: 3rem;
+    font-weight: 600;
+    word-wrap: break-word;
+    word-break: break-all;
+    line-height: 1.1;
+    transition: transform var(--transition-normal);
+}
+
+/* Animation for result display */
+.display-result.update {
+    animation: resultUpdate 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes resultUpdate {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.display-result.error {
+    animation: errorShake 0.4s ease-in-out;
+    color: #ef4444;
+}
+
+@keyframes errorShake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+    20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+
+/* ==========================================
+   KEYPAD SECTION
+   ========================================== */
+.calculator-keypad {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+/* ==========================================
+   BUTTON STYLES
+   ========================================== */
+.btn {
+    border: none;
+    outline: none;
+    font-size: 1.5rem;
+    font-weight: 600;
+    padding: 0;
+    height: 64px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: 
+        background-color var(--transition-fast),
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast);
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Button ripple effect */
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    transition: 
+        transform 0.4s ease-out,
+        opacity 0.4s ease-out;
+    pointer-events: none;
+}
+
+.btn:active::before {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 1;
+    transition: 0s;
+}
+
+/* Number buttons */
+.btn-number,
+.btn-zero,
+.btn-decimal {
+    background: var(--btn-number-bg);
+    color: var(--display-text);
+    box-shadow: 
+        0 4px 6px -1px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.btn-number:hover,
+.btn-zero:hover,
+.btn-decimal:hover {
+    background: var(--btn-number-hover);
+}
+
+.btn-number:active,
+.btn-zero:active,
+.btn-decimal:active {
+    background: var(--btn-number-active);
+    transform: translateY(2px);
+    box-shadow: 
+        0 1px 2px -1px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Operation buttons */
+.btn-operation {
+    background: var(--btn-operation-bg);
+    color: white;
+    box-shadow: 
+        0 4px 6px -1px rgba(14, 165, 233, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.btn-operation:hover {
+    background: var(--btn-operation-hover);
+}
+
+.btn-operation:active {
+    background: var(--btn-operation-active);
+    transform: translateY(2px);
+    box-shadow: 
+        0 1px 2px -1px rgba(14, 165, 233, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.btn-operation[data-action="divide"],
+.btn-operation[data-action="multiply"],
+.btn-operation[data-action="subtract"],
+.btn-operation[data-action="add"] {
+    font-size: 1.75rem;
+}
+
+/* Clear button */
+.btn-clear {
+    background: var(--btn-clear-bg);
+    color: white;
+    box-shadow: 
+        0 4px 6px -1px rgba(239, 68, 68, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.btn-clear:hover {
+    background: var(--btn-clear-hover);
+}
+
+.btn-clear:active {
+    background: var(--btn-clear-active);
+    transform: translateY(2px);
+    box-shadow: 
+        0 1px 2px -1px rgba(239, 68, 68, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Equals button */
+.btn-equals {
+    background: var(--btn-equals-bg);
+    color: white;
+    box-shadow: 
+        0 4px 6px -1px rgba(16, 185, 129, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    grid-row: span 2;
+    height: 140px;
+}
+
+.btn-equals:hover {
+    background: var(--btn-equals-hover);
+}
+
+.btn-equals:active {
+    background: var(--btn-equals-active);
+    transform: translateY(2px);
+    box-shadow: 
+        0 1px 2px -1px rgba(16, 185, 129, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Delete button */
+.btn-operation[data-action="delete"] {
+    font-size: 1.25rem;
+}
+
+/* ==========================================
+   ZERO BUTTON SPAN
+   ========================================== */
+.btn-zero {
+    grid-column: span 2;
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN
+   ========================================== */
+
+/* Tablets */
+@media (max-width: 400px) {
+    .calculator {
+        padding: 16px;
+        border-radius: 20px;
+    }
+
+    .calculator-display {
+        padding: 20px;
+        min-height: 100px;
+    }
+
+    .display-result {
+        font-size: 2.5rem;
+    }
+
+    .calculator-keypad {
+        gap: 10px;
+    }
+
+    .btn {
+        height: 56px;
+        font-size: 1.25rem;
+    }
+
+    .btn-equals {
+        height: 122px;
+    }
+}
+
+/* Mobile devices */
+@media (max-width: 320px) {
+    body {
+        padding: 12px;
+    }
+
+    .calculator {
+        padding: 12px;
+        border-radius: 16px;
+    }
+
+    .calculator-display {
+        padding: 16px;
+        min-height: 90px;
+        margin-bottom: 16px;
+    }
+
+    .display-input {
+        font-size: 1rem;
+        min-height: 1.25rem;
+    }
+
+    .display-result {
+        font-size: 2rem;
+    }
+
+    .calculator-keypad {
+        gap: 8px;
+    }
+
+    .btn {
+        height: 48px;
+        font-size: 1.125rem;
+        border-radius: 12px;
+    }
+
+    .btn-operation[data-action="divide"],
+    .btn-operation[data-action="multiply"],
+    .btn-operation[data-action="subtract"],
+    .btn-operation[data-action="add"] {
+        font-size: 1.5rem;
+    }
+
+    .btn-equals {
+        height: 104px;
+    }
+
+    .btn-clear,
+    .btn-operation[data-action="delete"] {
+        font-size: 1rem;
+    }
+}
+
+/* Large screens */
+@media (min-width: 768px) {
+    .calculator {
+        max-width: 400px;
+    }
+
+    .btn {
+        height: 72px;
+    }
+
+    .btn-equals {
+        height: 156px;
+    }
+}
+
+/* ==========================================
+   ACCESSIBILITY
+   ========================================== */
+.btn:focus-visible {
+    outline: 2px solid var(--btn-operation-bg);
+    outline-offset: 2px;
+}
+
+/* ==========================================
+   UTILITY CLASSES
+   ========================================== */
+.hidden {
+    display: none !important;
+}
+
+.btn.clicked {
+    transform: scale(0.95);
+}
+
+/* ==========================================
+   PRINT STYLES
+   ========================================== */
+@media print {
+    body {
+        background: white;
+    }
+
+    .calculator {
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+}
