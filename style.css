@@ -40,13 +40,15 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background: 
-        linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)),
-        url('stadium-bg.jpg');
-    background-size: cover;
-    background-position: center;
+    background: repeating-linear-gradient(
+        45deg,
+        #000000 0px,
+        #000000 20px,
+        #ffffff 20px,
+        #ffffff 40px
+    );
+    background-size: 40px 40px;
     background-attachment: fixed;
-    background-repeat: no-repeat;
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -55,7 +57,7 @@ body {
     position: relative;
 }
 
-/* Animated background particles */
+/* Animated background overlay */
 body::before {
     content: '';
     position: fixed;
@@ -63,9 +65,9 @@ body::before {
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(circle at 20% 50%, rgba(14, 165, 233, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
-    animation: backgroundPulse 8s ease-in-out infinite;
+    background: radial-gradient(circle at 20% 50%, rgba(14, 165, 233, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+    animation: backgroundPulse 6s ease-in-out infinite;
     pointer-events: none;
     z-index: 0;
 }
@@ -73,11 +75,9 @@ body::before {
 @keyframes backgroundPulse {
     0%, 100% {
         opacity: 1;
-        transform: scale(1);
     }
     50% {
-        opacity: 0.7;
-        transform: scale(1.1);
+        opacity: 0.8;
     }
 }
 
@@ -115,8 +115,65 @@ body::before {
     background-size: 400% 400%;
     border-radius: 26px;
     z-index: -1;
-    animation: borderGlow 4s ease infinite;
-    opacity: 0.3;
+    animation: borderGlow 3s ease infinite;
+    opacity: 0.4;
+}
+
+/* Floating orbs background */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(14, 165, 233, 0.3) 0%, transparent 70%);
+    animation: float 10s ease-in-out infinite;
+}
+
+.orb:nth-child(1) {
+    width: 300px;
+    height: 300px;
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.orb:nth-child(2) {
+    width: 200px;
+    height: 200px;
+    top: 60%;
+    left: 80%;
+    animation-delay: -3s;
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, transparent 70%);
+}
+
+.orb:nth-child(3) {
+    width: 250px;
+    height: 250px;
+    top: 30%;
+    left: 70%;
+    animation-delay: -6s;
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.2) 0%, transparent 70%);
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    33% {
+        transform: translate(30px, -30px) scale(1.1);
+    }
+    66% {
+        transform: translate(-20px, 20px) scale(0.9);
+    }
 }
 
 @keyframes borderGlow {
