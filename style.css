@@ -10,27 +10,27 @@
 :root {
     /* Color Palette */
     --bg-color: #0f172a;
-    --calculator-bg: #1e293b;
-    --display-bg: #0f172a;
+    --calculator-bg: rgba(30, 41, 59, 0.85);
+    --display-bg: rgba(15, 23, 42, 0.9);
     --display-text: #f1f5f9;
     --display-secondary: #64748b;
 
     /* Button Colors */
-    --btn-number-bg: #334155;
-    --btn-number-hover: #475569;
-    --btn-number-active: #64748b;
+    --btn-number-bg: rgba(51, 65, 85, 0.7);
+    --btn-number-hover: rgba(71, 85, 105, 0.8);
+    --btn-number-active: rgba(100, 116, 139, 0.9);
 
-    --btn-operation-bg: #0ea5e9;
-    --btn-operation-hover: #0284c7;
-    --btn-operation-active: #0369a1;
+    --btn-operation-bg: rgba(14, 165, 233, 0.8);
+    --btn-operation-hover: rgba(2, 132, 199, 0.9);
+    --btn-operation-active: rgba(3, 105, 161, 1);
 
-    --btn-clear-bg: #ef4444;
-    --btn-clear-hover: #dc2626;
-    --btn-clear-active: #b91c1c;
+    --btn-clear-bg: rgba(239, 68, 68, 0.8);
+    --btn-clear-hover: rgba(220, 38, 38, 0.9);
+    --btn-clear-active: rgba(185, 28, 28, 1);
 
-    --btn-equals-bg: #10b981;
-    --btn-equals-hover: #059669;
-    --btn-equals-active: #047857;
+    --btn-equals-bg: rgba(16, 185, 129, 0.8);
+    --btn-equals-hover: rgba(5, 150, 105, 0.9);
+    --btn-equals-active: rgba(4, 120, 87, 1);
 
     /* Animation Timing */
     --transition-fast: 0.1s;
@@ -40,12 +40,45 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+    background: 
+        linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)),
+        url('stadium-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px;
+    position: relative;
+}
+
+/* Animated background particles */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(14, 165, 233, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+    animation: backgroundPulse 8s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes backgroundPulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.1);
+    }
 }
 
 /* ==========================================
@@ -53,26 +86,59 @@ body {
    ========================================== */
 .calculator {
     background: var(--calculator-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 24px;
     box-shadow: 
-        0 25px 50px -12px rgba(0, 0, 0, 0.5),
-        0 0 0 1px rgba(255, 255, 255, 0.05),
+        0 25px 50px -12px rgba(0, 0, 0, 0.6),
+        0 10px 30px rgba(14, 165, 233, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
     padding: 24px;
     max-width: 360px;
     width: 100%;
     transform: translateY(0);
-    animation: calculatorEnter 0.5s ease-out;
+    animation: calculatorEnter 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    z-index: 10;
+}
+
+/* Floating glow effect */
+.calculator::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #0ea5e9, #10b981, #ef4444, #f59e0b);
+    background-size: 400% 400%;
+    border-radius: 26px;
+    z-index: -1;
+    animation: borderGlow 4s ease infinite;
+    opacity: 0.3;
+}
+
+@keyframes borderGlow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 @keyframes calculatorEnter {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(50px) scale(0.9);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
 }
 
@@ -182,19 +248,56 @@ body {
     left: 50%;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
     transform: translate(-50%, -50%) scale(0);
     opacity: 0;
-    transition: 
-        transform 0.4s ease-out,
-        opacity 0.4s ease-out;
+    transition:
+        transform 0.6s ease-out,
+        opacity 0.6s ease-out;
     pointer-events: none;
 }
 
 .btn:active::before {
-    transform: translate(-50%, -50%) scale(2);
+    transform: translate(-50%, -50%) scale(2.5);
     opacity: 1;
     transition: 0s;
+}
+
+/* Button click animation */
+.btn.clicked {
+    animation: buttonClick 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes buttonClick {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.92);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Button hover glow */
+.btn:hover {
+    animation: buttonGlow 1s ease-in-out;
+}
+
+@keyframes buttonGlow {
+    0% {
+        box-shadow: 
+            0 4px 6px -1px rgba(0, 0, 0, 0.3),
+            0 0 20px rgba(14, 165, 233, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+    100% {
+        box-shadow: 
+            0 4px 6px -1px rgba(0, 0, 0, 0.3),
+            0 0 30px rgba(14, 165, 233, 0),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
 }
 
 /* Number buttons */
